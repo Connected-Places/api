@@ -24,7 +24,7 @@
         "goldspecdigital/oooas": "^2.8",
         "guzzlehttp/guzzle": "^7.2",
         "kalnoy/nestedset": "^6.0",
-        "laravel/framework": "^9.46",
+        "laravel/framework": "^9.51",
         "laravel/passport": "^10.3",
         "laravel/scout": "*",
         "laravel/tinker": "^2.7",
