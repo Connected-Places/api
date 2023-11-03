@@ -1,24 +1,21 @@
 {
     "private": true,
     "scripts": {
-        "dev": "npm run development",
-        "development": "mix",
-        "watch": "mix watch",
-        "watch-poll": "mix watch -- --watch-options-poll=1000",
-        "hot": "mix watch --hot",
-        "prod": "npm run production",
-        "production": "mix --production"
+        "dev": "vite",
+        "build": "vite build"
     },
     "devDependencies": {
         "axios": "^0.25",
         "govuk-frontend": "^2.3.0",
-        "laravel-mix": "^6.0.12",
         "lodash": "^4.17.21",
         "postcss": "^8.4.25",
         "resolve-url-loader": "^5.0.0",
         "sass": "^1.63.6",
         "sass-loader": "^12.1.0",
         "swagger-ui": "^4.19.1",
-        "vue": "^2.7.14"
+        "vue": "^2.7.14",
+        "vite": "^3.0.2",
+        "laravel-vite-plugin": "^0.6.0",
+        "@vitejs/plugin-vue2": "^1.1.2"
     }
 }
