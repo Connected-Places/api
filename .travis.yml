@@ -53,7 +53,7 @@ before_deploy: |
     export HAS_RAN_BEFORE_DEPLOY="TRUE"
 
     echo "Compiling assets for production..."
-    ./develop npm run prod
+    ./develop npm run build
 
     echo "Installing AWS CLI..."
     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"

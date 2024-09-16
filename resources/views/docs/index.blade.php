@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('css')
-  <link rel="stylesheet" href="{{ mix('/css/docs.css') }}">
+  @vite('resources/css/docs.css')
 @endsection
 
 @section('content')
@@ -9,5 +9,5 @@
 @endsection
 
 @section('js')
-  <script src="{{ mix('/js/docs.js') }}"></script>
+  @vite('resources/js/docs.js')
 @endsection
