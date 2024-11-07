@@ -40,9 +40,9 @@ trait OrganisationEventMutators
             'https://calendar.google.com/calendar/render?action=TEMPLATE&dates=%s%%2F%s&details=%s&location=%s&text=%s',
             urlencode($this->startDateTime->format('Ymd\\THis\\Z')),
             urlencode($this->endDateTime->format('Ymd\\THis\\Z')),
-            urlencode($this->title),
+            urlencode($this->intro),
             $this->is_virtual ? '' : urlencode($this->location->toAddress()->__toString()),
-            urlencode($this->intro)
+            urlencode($this->title)
         );
     }
 
