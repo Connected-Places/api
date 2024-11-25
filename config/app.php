@@ -142,6 +142,8 @@ return [
         // 'store'  => 'redis',
     ],
 
+    'logo' => env('APP_LOGO', 'logo.png'),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
