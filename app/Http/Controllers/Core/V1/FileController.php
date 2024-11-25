@@ -64,7 +64,7 @@ class FileController extends Controller
      */
     public function display(ShowRequest $request, string $fileName)
     {
-        $file = File::where('filename', $fileName)->firstOrFail();
+        $file = File::where('filename', $fileName)->orderBy('created_at', 'asc')->firstOrFail();
 
         return response()->streamDownload(function () use ($request, $file) {
             echo $file->resizedVersion($request->query('max_dimension', null))->getContent();
@@ -72,13 +72,5 @@ class FileController extends Controller
             'Access-Control-Expose-Headers' => ['Content-Type', 'Content-Disposition'],
             'Content-Type' => $file->mime_type,
         ], 'inline');
-        // return response()->file($file->url(), [
-        //     'Access-Control-Expose-Headers' => ['Content-Type', 'Content-Disposition'],
-        //     'Content-Type' => $file->mime_type,
-        //     'Content-Disposition' => sprintf('inline; filename="%s"', $file->filename),
-        // ]);
-        // return response()->streamDownload(function () use ($file) {
-        //     return $file->toResponse();
-        // }, $file->id . File::extensionFromMime($file->mime_type));
     }
 }
