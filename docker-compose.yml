@@ -10,6 +10,8 @@ services:
       - mysql
       - redis
       - elasticsearch
+    ports:
+      - '8000:80'
     command: /usr/bin/supervisord
 
   queue-worker:
