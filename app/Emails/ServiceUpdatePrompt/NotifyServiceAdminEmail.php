@@ -16,7 +16,7 @@ class NotifyServiceAdminEmail extends Email
      */
     public function getContent(): string
     {
-        return 'emails.service.updated.notify_service.content';
+        return 'emails.service.updated.notify_service_admin.content';
     }
 
     /**
@@ -24,6 +24,6 @@ class NotifyServiceAdminEmail extends Email
      */
     public function getSubject(): string
     {
-        return 'emails.service.updated.notify_service.subject';
+        return 'emails.service.updated.notify_service_admin.subject';
     }
 }
