@@ -30,7 +30,7 @@ echo "Installing NPM dependencies..."
 ./develop npm ci
 
 echo "Compiling assets..."
-./develop npm run prod
+./develop npm run build
 docker run --rm \
     -w /opt \
     -v ${TRAVIS_BUILD_DIR}/docker/app/packaged:/opt \

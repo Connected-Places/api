@@ -5,6 +5,7 @@
 /public/assets/*
 /public/img/*
 /public/hot
+/public/build
 /public/storage
 /public/mix-manifest.json
 /storage/*.key
