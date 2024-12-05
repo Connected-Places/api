@@ -84,7 +84,7 @@ abstract class Model extends BaseModel
     public function makeSearchable($string)
     {
         $string = mb_strtolower($string);
-        preg_match_all('/(?:\b([A-Z,a-z]+)\b)/i', $string, $words);
+        preg_match_all('/(?:([A-Z,a-z]+))/i', $string, $words);
 
         return implode(' ', array_filter($words[1], function ($word) {
             return mb_strlen($word) > 2;

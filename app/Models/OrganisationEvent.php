@@ -107,7 +107,7 @@ class OrganisationEvent extends Model implements AppliesUpdateRequests, HasTaxon
         $rules['image_file_id'] = [
             'nullable',
             'exists:files,id',
-            new FileIsMimeType(File::MIME_TYPE_PNG, File::MIME_TYPE_JPG, File::MIME_TYPE_SVG),
+            new FileIsMimeType(File::MIME_TYPE_PNG, File::MIME_TYPE_JPG, File::MIME_TYPE_SVG, File::MIME_TYPE_JPEG),
         ];
 
         return ValidatorFacade::make($updateRequest->data, $rules);
