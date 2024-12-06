@@ -39,8 +39,8 @@ class SettingController extends Controller
                                 'footer_content' => sanitize_markdown($request->input('cms.frontend.global.footer_content')),
                                 'contact_phone' => $request->input('cms.frontend.global.contact_phone'),
                                 'contact_email' => $request->input('cms.frontend.global.contact_email'),
-                                'facebook_handle' => $request->input('cms.frontend.global.facebook_handle'),
-                                'twitter_handle' => $request->input('cms.frontend.global.twitter_handle'),
+                                'facebook_handle' => $request->input('cms.frontend.global.facebook_handle') ?? "",
+                                'twitter_handle' => $request->input('cms.frontend.global.twitter_handle') ?? "",
                             ],
                             'home' => [
                                 'search_title' => $request->input('cms.frontend.home.search_title'),
