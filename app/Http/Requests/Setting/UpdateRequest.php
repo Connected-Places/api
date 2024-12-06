@@ -33,8 +33,8 @@ class UpdateRequest extends FormRequest
             'cms.frontend.global.footer_content' => ['required', 'string'],
             'cms.frontend.global.contact_phone' => ['required', 'string'],
             'cms.frontend.global.contact_email' => ['required', 'string', 'email'],
-            'cms.frontend.global.facebook_handle' => ['optional', 'string'],
-            'cms.frontend.global.twitter_handle' => ['optional', 'string'],
+            'cms.frontend.global.facebook_handle' => ['nullable', 'string'],
+            'cms.frontend.global.twitter_handle' => ['nullable', 'string'],
 
             'cms.frontend.home' => ['required', 'array'],
             'cms.frontend.home.search_title' => ['required', 'string'],
