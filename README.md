@@ -1,4 +1,4 @@
-# Ayup Connect
+# Ayup Connect - API
 
 ## Getting Started
 
