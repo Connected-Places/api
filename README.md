@@ -1,4 +1,4 @@
-# Connected Places
+# Ayup Connect - API
 
 ## Getting Started
 
@@ -84,7 +84,7 @@ To run only the code style tests:
 ## Deployment
 
 Deployment is fully automated by pushing a commit to `develop` or
-`master`. More information on this process can be [found in the wiki](https://github.com/Connected-Places/api/wiki/Branching-and-Release-Strategy#continuous-delivery).
+`master`.
 
 ## Built with
 
@@ -99,14 +99,13 @@ of conduct, and the process for submitting pull requests to us.
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions
-available, see the [tags on this repository](https://github.com/Connected-Places/api/tags).
+We use [SemVer](http://semver.org/) for versioning.
 
 ## Authors
 
 - [Ayup Digital](https://ayup.agency/)
 
-See also the list of [contributors](https://github.com/Connected-Places/api/graphs/contributors)
+See also the list of [contributors](https://github.com/AyupDigital/api/graphs/contributors)
 who participated in this project.
 
 ## License
