@@ -19,6 +19,7 @@ class StorePageSearchSchema extends Schema
                 Schema::integer('per_page')
                     ->default(config('ck.pagination_results')),
                 Schema::string('query'),
+                Schema::string('parent_id'),
             );
     }
 }
