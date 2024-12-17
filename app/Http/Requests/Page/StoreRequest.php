@@ -11,6 +11,7 @@ use App\Rules\InformationPageCannotHaveCollection;
 use App\Rules\LandingPageCannotHaveParent;
 use App\Rules\PageContent;
 use App\Rules\Slug;
+use App\Rules\TopicPageCannotHaveParent;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -65,8 +66,8 @@ class StoreRequest extends FormRequest
             ],
             'page_type' => [
                 'sometimes',
-                Rule::in([Page::PAGE_TYPE_INFORMATION, Page::PAGE_TYPE_LANDING]),
-                new LandingPageCannotHaveParent($this->input('parent_id')),
+                Rule::in([Page::PAGE_TYPE_INFORMATION, Page::PAGE_TYPE_LANDING, Page::PAGE_TYPE_TOPIC]),
+                new TopicPageCannotHaveParent($this->input('parent_id')),
             ],
             'parent_id' => ['sometimes', 'nullable', 'string', 'exists:pages,id'],
             'image_file_id' => [

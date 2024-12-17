@@ -55,4 +55,12 @@ trait PageMutators
     {
         return $this->landingPageAncestors->last();
     }
+
+    /**
+     * Get the last ancestor with type 'topic page'.
+     */
+    public function getTopicPageAttribute(): ?Page
+    {
+        return $this->topicPageAncestors->last();
+    }
 }

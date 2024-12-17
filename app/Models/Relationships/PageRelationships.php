@@ -34,4 +34,9 @@ trait PageRelationships
     {
         return $this->ancestors()->where('page_type', static::PAGE_TYPE_LANDING);
     }
+
+    public function topicPageAncestors(): AncestorsRelation
+    {
+        return $this->ancestors()->where('page_type', static::PAGE_TYPE_TOPIC);
+    }
 }

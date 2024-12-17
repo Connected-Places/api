@@ -50,6 +50,12 @@ class PageResource extends JsonResource
                         'excerpt' => $child->excerpt,
                         'order' => $child->order,
                         'enabled' => $child->enabled,
+                        'image' => $child->image ? [
+                            'id' => $child->image->id,
+                            'url' => $child->image->url(),
+                            'mime_type' => $child->image->mime_type,
+                            'alt_text' => $child->image->altText,
+                        ] : null,
                         'page_type' => $child->page_type,
                         'created_at' => $child->created_at->format(CarbonImmutable::ISO8601),
                         'updated_at' => $child->updated_at->format(CarbonImmutable::ISO8601),
@@ -82,6 +88,19 @@ class PageResource extends JsonResource
                     'page_type' => $this->landingPage->page_type,
                     'created_at' => $this->landingPage->created_at->format(CarbonImmutable::ISO8601),
                     'updated_at' => $this->landingPage->updated_at->format(CarbonImmutable::ISO8601),
+                ] : null;
+            }),
+            'topic_page' => $this->whenLoaded('topicPageAncestors', function () {
+                return $this->topicPage ? [
+                    'id' => $this->topicPage->id,
+                    'title' => $this->topicPage->title,
+                    'slug' => $this->topicPage->slug,
+                    'excerpt' => $this->topicPage->excerpt,
+                    'order' => $this->topicPage->order,
+                    'enabled' => $this->topicPage->enabled,
+                    'page_type' => $this->topicPage->page_type,
+                    'created_at' => $this->topicPage->created_at->format(CarbonImmutable::ISO8601),
+                    'updated_at' => $this->topicPage->updated_at->format(CarbonImmutable::ISO8601),
                 ] : null;
             }),
             'collection_categories' => CollectionCategoryResource::collection($this->whenLoaded('collectionCategories')),

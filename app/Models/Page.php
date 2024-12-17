@@ -40,6 +40,8 @@ class Page extends Model implements AppliesUpdateRequests
 
     const PARENT_KEY = 'parent_uuid';
 
+    const PAGE_TYPE_TOPIC = 'topic';
+
     const PAGE_TYPE_INFORMATION = 'information';
 
     const PAGE_TYPE_LANDING = 'landing';
@@ -131,6 +133,16 @@ class Page extends Model implements AppliesUpdateRequests
     public function getParentIdName(): string
     {
         return static::PARENT_KEY;
+    }
+
+    /**
+     * Set the page_type to 'topic'.
+     */
+    public function asTopicPage(): self
+    {
+        $this->page_type = static::PAGE_TYPE_TOPIC;
+
+        return $this;
     }
 
     /**

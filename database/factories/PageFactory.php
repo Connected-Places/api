@@ -114,6 +114,66 @@ class PageFactory extends Factory
         });
     }
 
+    public function topicPage()
+    {
+        return $this->state(function () {
+            return [
+                'page_type' => Page::PAGE_TYPE_TOPIC,
+                'content' => [
+                    'introduction' => [
+                        'content' => [
+                            [
+                                'type' => 'copy',
+                                'value' => 'Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.',
+                            ],
+                            [
+                                'type' => 'cta',
+                                'title' => 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.',
+                                'description' => 'Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.',
+                                'url' => $this->faker->url(),
+                                'buttonText' => $this->faker->words(3, true),
+                            ],
+                        ],
+                    ],
+                    'about' => [
+                        'content' => [
+                            [
+                                'type' => 'copy',
+                                'value' => 'Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.',
+                            ],
+                            [
+                                'type' => 'cta',
+                                'title' => 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.',
+                                'description' => 'Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.',
+                                'url' => $this->faker->url(),
+                                'buttonText' => $this->faker->words(3, true),
+                            ],
+                            [
+                                'type' => 'copy',
+                                'value' => 'Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.',
+                            ],
+                        ],
+                    ],
+                    'info-pages' => [
+                        'title' => 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.',
+                        'content' => [
+                            [
+                                'type' => 'copy',
+                                'value' => 'Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.']]],
+                    'collections' => [
+                        'title' => 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit.',
+                        'content' => [
+                            [
+                                'type' => 'copy',
+                                'value' => 'Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium.',
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+        });
+    }
+
     public function withCollections()
     {
         return $this->afterCreating(function (Page $page) {
@@ -122,19 +182,19 @@ class PageFactory extends Factory
         })->state([]);
     }
 
-    public function withChildren()
+    public function withChildren($pageType = Page::PAGE_TYPE_INFORMATION)
     {
-        return $this->afterCreating(function (Page $page) {
-            Page::factory()->count(3)->create()->each(function (Page $child) use ($page) {
+        return $this->afterCreating(function (Page $page) use ($pageType) {
+            Page::factory()->count(3)->create(['page_type' => $pageType])->each(function (Page $child) use ($page) {
                 $page->appendNode($child);
             });
         })->state([]);
     }
 
-    public function withParent()
+    public function withParent($pageType = Page::PAGE_TYPE_LANDING)
     {
-        return $this->afterCreating(function (Page $page) {
-            Page::factory()->create()->appendNode($page);
+        return $this->afterCreating(function (Page $page) use ($pageType) {
+            Page::factory()->create(['page_type' => $pageType])->appendNode($page);
         })->state([]);
     }
 }

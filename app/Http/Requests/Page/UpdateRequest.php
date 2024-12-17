@@ -13,6 +13,7 @@ use App\Rules\InformationPageCannotHaveCollection;
 use App\Rules\LandingPageCannotHaveParent;
 use App\Rules\PageContent;
 use App\Rules\Slug;
+use App\Rules\TopicPageCannotHaveParent;
 use App\Rules\UserHasRole;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -87,8 +88,8 @@ class UpdateRequest extends FormRequest
             ],
             'page_type' => [
                 'sometimes',
-                Rule::in([Page::PAGE_TYPE_INFORMATION, Page::PAGE_TYPE_LANDING]),
-                new LandingPageCannotHaveParent($this->has('parent_id') ? $this->parent_id : $this->page->parent_uuid),
+                Rule::in([Page::PAGE_TYPE_INFORMATION, Page::PAGE_TYPE_LANDING, Page::PAGE_TYPE_TOPIC]),
+                new TopicPageCannotHaveParent($this->has('parent_id') ? $this->parent_id : $this->page->parent_uuid),
             ],
             'parent_id' => ['sometimes', 'nullable', 'string', 'exists:pages,id'],
             'image_file_id' => [

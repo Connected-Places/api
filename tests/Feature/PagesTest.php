@@ -81,15 +81,21 @@ class PagesTest extends TestCase
         $landingPage = Page::factory()->withImage()->landingPage()
             ->create();
 
+        $topicPage = Page::factory()->withImage()->topicPage()
+            ->create();
+
         $response = $this->json('GET', '/core/v1/pages/index');
 
         $response->assertStatus(Response::HTTP_OK);
-        $response->assertJsonCount(2, 'data');
+        $response->assertJsonCount(3, 'data');
         $response->assertJsonFragment([
             'id' => $page->parent->id,
         ]);
         $response->assertJsonFragment([
             'id' => $landingPage->id,
+        ]);
+        $response->assertJsonFragment([
+            'id' => $topicPage->id,
         ]);
         $response->assertJsonMissing([
             'id' => $page->id,
@@ -113,6 +119,9 @@ class PagesTest extends TestCase
             ->create();
 
         $landingPage = Page::factory()->withImage()->landingPage()
+            ->create();
+
+        $topicPage = Page::factory()->withImage()->topicPage()
             ->create();
 
         $response = $this->json('GET', '/core/v1/pages/index');
@@ -139,16 +148,22 @@ class PagesTest extends TestCase
         $landingPage = Page::factory()->withImage()->landingPage()
             ->create();
 
+        $topicPage = Page::factory()->withImage()->topicPage()
+            ->create();
+
         $response = $this->json('GET', '/core/v1/pages/index');
 
         $response->assertStatus(Response::HTTP_OK);
 
-        $response->assertJsonCount(3, 'data');
+        $response->assertJsonCount(4, 'data');
         $response->assertJsonFragment([
             'id' => $page->parent->id,
         ]);
         $response->assertJsonFragment([
             'id' => $landingPage->id,
+        ]);
+        $response->assertJsonFragment([
+            'id' => $topicPage->id,
         ]);
         $response->assertJsonFragment([
             'id' => $page->id,
@@ -164,23 +179,30 @@ class PagesTest extends TestCase
         $disabledPage = Page::factory()->disabled()->create();
         $landingPages = Page::factory()->count(2)->landingPage()->create();
         $disabledLandingPage = Page::factory()->landingPage()->disabled()->create();
+        $topicPages = Page::factory()->count(2)->topicPage()->create();
+        $disabledTopicPage = Page::factory()->topicPage()->disabled()->create();
 
         $ids = [
             $pages->get(1)->id,
             $disabledPage->id,
             $landingPages->get(1)->id,
             $disabledLandingPage->id,
+            $topicPages->get(1)->id,
+            $disabledTopicPage->id,
         ];
 
         $response = $this->json('GET', '/core/v1/pages/index?filter[id]=' . implode(',', $ids));
 
         $response->assertStatus(Response::HTTP_OK);
-        $response->assertJsonCount(2, 'data');
+        $response->assertJsonCount(3, 'data');
         $response->assertJsonFragment([
             'id' => $pages->get(1)->id,
         ]);
         $response->assertJsonFragment([
             'id' => $landingPages->get(1)->id,
+        ]);
+        $response->assertJsonFragment([
+            'id' => $topicPages->get(1)->id,
         ]);
         $response->assertJsonMissing([
             'id' => $pages->get(0)->id,
@@ -193,6 +215,12 @@ class PagesTest extends TestCase
         ]);
         $response->assertJsonMissing([
             'id' => $disabledLandingPage->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $topicPages->get(0)->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $disabledTopicPage->id,
         ]);
     }
 
@@ -213,23 +241,30 @@ class PagesTest extends TestCase
         $disabledPage = Page::factory()->disabled()->create();
         $landingPages = Page::factory()->count(2)->landingPage()->create();
         $disabledLandingPage = Page::factory()->landingPage()->disabled()->create();
+        $topicPages = Page::factory()->count(2)->topicPage()->create();
+        $disabledTopicPage = Page::factory()->topicPage()->disabled()->create();
 
         $ids = [
             $pages->get(1)->id,
             $disabledPage->id,
             $landingPages->get(1)->id,
             $disabledLandingPage->id,
+            $topicPages->get(1)->id,
+            $disabledTopicPage->id,
         ];
 
         $response = $this->json('GET', '/core/v1/pages/index?filter[id]=' . implode(',', $ids));
 
         $response->assertStatus(Response::HTTP_OK);
-        $response->assertJsonCount(4, 'data');
+        $response->assertJsonCount(6, 'data');
         $response->assertJsonFragment([
             'id' => $pages->get(1)->id,
         ]);
         $response->assertJsonFragment([
             'id' => $landingPages->get(1)->id,
+        ]);
+        $response->assertJsonFragment([
+            'id' => $topicPages->get(1)->id,
         ]);
         $response->assertJsonMissing([
             'id' => $pages->get(0)->id,
@@ -237,11 +272,17 @@ class PagesTest extends TestCase
         $response->assertJsonMissing([
             'id' => $landingPages->get(0)->id,
         ]);
+        $response->assertJsonMissing([
+            'id' => $topicPages->get(0)->id,
+        ]);
         $response->assertJsonFragment([
             'id' => $disabledPage->id,
         ]);
         $response->assertJsonFragment([
             'id' => $disabledLandingPage->id,
+        ]);
+        $response->assertJsonFragment([
+            'id' => $disabledTopicPage->id,
         ]);
     }
 
@@ -311,6 +352,31 @@ class PagesTest extends TestCase
     /**
      * @test
      */
+    public function listTopicPageChildPagesAsGuestFilterByParentID200(): void
+    {
+        $topicPage = Page::factory()->topicPage()->withChildren(Page::PAGE_TYPE_LANDING)->create();
+
+        $response = $this->json('GET', '/core/v1/pages/index?filter[parent_id]=' . $topicPage->id);
+
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJsonCount(3, 'data');
+        $response->assertJsonFragment([
+            'id' => $topicPage->children->get(0)->id,
+        ]);
+        $response->assertJsonFragment([
+            'id' => $topicPage->children->get(1)->id,
+        ]);
+        $response->assertJsonFragment([
+            'id' => $topicPage->children->get(2)->id,
+        ]);
+        $response->assertJsonFragment([
+            'id' => $topicPage->id,
+        ]);
+    }
+
+    /**
+     * @test
+     */
     public function listPagesAsGuestFilterByTitle200(): void
     {
         $page1 = Page::factory()->create(['title' => 'Page One']);
@@ -319,11 +385,12 @@ class PagesTest extends TestCase
         $page4 = Page::factory()->create(['title' => 'Page the Fourth']);
         $page5 = Page::factory()->create(['title' => 'Final']);
         $landingPage = Page::factory()->landingPage()->create(['title' => 'Landing Page']);
+        $topicPage = Page::factory()->topicPage()->create(['title' => 'Topic Page']);
 
         $response = $this->json('GET', '/core/v1/pages/index?filter[title]=page');
 
         $response->assertStatus(Response::HTTP_OK);
-        $response->assertJsonCount(4, 'data');
+        $response->assertJsonCount(5, 'data');
         $response->assertJsonFragment([
             'id' => $page1->id,
         ]);
@@ -342,6 +409,9 @@ class PagesTest extends TestCase
         $response->assertJsonFragment([
             'id' => $landingPage->id,
         ]);
+        $response->assertJsonFragment([
+            'id' => $topicPage->id,
+        ]);
     }
 
     /**
@@ -353,8 +423,44 @@ class PagesTest extends TestCase
         $page2 = Page::factory()->disabled()->create();
         $page3 = Page::factory()->create();
         $page4 = Page::factory()->landingPage()->disabled()->create();
+        $page5 = Page::factory()->topicPage()->create();
+        $page6 = Page::factory()->topicPage()->disabled()->create();
 
         $response = $this->json('GET', '/core/v1/pages/index?filter[page_type]=landing');
+
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJsonCount(1, 'data');
+        $response->assertJsonFragment([
+            'id' => $page1->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $page2->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $page3->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $page4->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $page5->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $page6->id,
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function listMixedStatePagesAsGuestFilterByTopicPage200(): void
+    {
+        $page1 = Page::factory()->topicPage()->create();
+        $page2 = Page::factory()->disabled()->create();
+        $page3 = Page::factory()->create();
+        $page4 = Page::factory()->topicPage()->disabled()->create();
+
+        $response = $this->json('GET', '/core/v1/pages/index?filter[page_type]=topic');
 
         $response->assertStatus(Response::HTTP_OK);
         $response->assertJsonCount(1, 'data');
@@ -381,6 +487,8 @@ class PagesTest extends TestCase
         $page2 = Page::factory()->disabled()->create();
         $page3 = Page::factory()->create();
         $page4 = Page::factory()->landingPage()->disabled()->create();
+        $page5 = Page::factory()->topicPage()->create();
+        $page6 = Page::factory()->topicPage()->disabled()->create();
 
         $response = $this->json('GET', '/core/v1/pages/index?filter[page_type]=information');
 
@@ -397,6 +505,12 @@ class PagesTest extends TestCase
         ]);
         $response->assertJsonMissing([
             'id' => $page4->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $page5->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $page6->id,
         ]);
     }
 
@@ -417,6 +531,8 @@ class PagesTest extends TestCase
         $page2 = Page::factory()->disabled()->create();
         $page3 = Page::factory()->create();
         $page4 = Page::factory()->landingPage()->disabled()->create();
+        $page5 = Page::factory()->topicPage()->create();
+        $page6 = Page::factory()->topicPage()->disabled()->create();
 
         $response = $this->json('GET', '/core/v1/pages/index?filter[page_type]=landing');
 
@@ -433,6 +549,12 @@ class PagesTest extends TestCase
         ]);
         $response->assertJsonFragment([
             'id' => $page4->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $page5->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $page6->id,
         ]);
     }
 
@@ -453,6 +575,8 @@ class PagesTest extends TestCase
         $page2 = Page::factory()->disabled()->create();
         $page3 = Page::factory()->create();
         $page4 = Page::factory()->landingPage()->disabled()->create();
+        $page5 = Page::factory()->topicPage()->create();
+        $page6 = Page::factory()->topicPage()->disabled()->create();
 
         $response = $this->json('GET', '/core/v1/pages/index?filter[page_type]=information');
 
@@ -470,6 +594,12 @@ class PagesTest extends TestCase
         $response->assertJsonMissing([
             'id' => $page4->id,
         ]);
+        $response->assertJsonMissing([
+            'id' => $page5->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $page6->id,
+        ]);
     }
 
     /**
@@ -483,6 +613,9 @@ class PagesTest extends TestCase
         $landingPage1 = Page::factory()->landingPage()->create(['title' => 'Landing Page One']);
         $landingPage2 = Page::factory()->landingPage()->create(['title' => 'Landing Two']);
         $landingPage3 = Page::factory()->landingPage()->create(['title' => 'Landing Three']);
+        $topicPage1 = Page::factory()->topicPage()->create(['title' => 'Topic Page One']);
+        $topicPage2 = Page::factory()->topicPage()->create(['title' => 'Topic Two']);
+        $topicPage3 = Page::factory()->topicPage()->create(['title' => 'Topic Three']);
 
         $response = $this->json('GET', '/core/v1/pages/index?filter[title]=page&filter[page_type]=information');
 
@@ -506,6 +639,15 @@ class PagesTest extends TestCase
         $response->assertJsonMissing([
             'id' => $landingPage3->id,
         ]);
+        $response->assertJsonMissing([
+            'id' => $topicPage1->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $topicPage2->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $topicPage3->id,
+        ]);
 
         $response = $this->json('GET', '/core/v1/pages/index?filter[title]=page&filter[page_type]=landing');
 
@@ -528,6 +670,46 @@ class PagesTest extends TestCase
         ]);
         $response->assertJsonMissing([
             'id' => $landingPage3->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $topicPage1->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $topicPage2->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $topicPage3->id,
+        ]);
+
+        $response = $this->json('GET', '/core/v1/pages/index?filter[title]=page&filter[page_type]=topic');
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJsonCount(1, 'data');
+        $response->assertJsonFragment([
+            'id' => $topicPage1->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $page1->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $page2->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $page3->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $landingPage1->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $landingPage2->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $landingPage3->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $topicPage2->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $topicPage3->id,
         ]);
     }
 
@@ -580,6 +762,34 @@ class PagesTest extends TestCase
                     'page_type',
                     'image',
                     'landing_page',
+                    'created_at',
+                    'updated_at',
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function listEnabledLandingPageAsGuestIncludeTopicPage200(): void
+    {
+        Page::factory()->topicPage()->withChildren(Page::PAGE_TYPE_LANDING)->create();
+
+        $response = $this->json('GET', '/core/v1/pages/index?include=topicPageAncestors');
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJsonStructure([
+            'data' => [
+                [
+                    'id',
+                    'slug',
+                    'title',
+                    'excerpt',
+                    'order',
+                    'enabled',
+                    'page_type',
+                    'image',
+                    'topic_page',
                     'created_at',
                     'updated_at',
                 ],
@@ -1042,6 +1252,68 @@ class PagesTest extends TestCase
                 ],
             ],
             'page_type' => Page::PAGE_TYPE_LANDING,
+        ];
+
+        $response = $this->json('POST', '/core/v1/pages', $data);
+
+        $response->assertStatus(Response::HTTP_OK);
+
+        //Then an update request should be created for the new page
+        $this->assertDatabaseHas((new UpdateRequest())->getTable(), [
+            'user_id' => $user->id,
+            'updateable_type' => UpdateRequest::NEW_TYPE_PAGE,
+            'updateable_id' => null,
+        ]);
+
+        $updateRequest = UpdateRequest::query()
+            ->where('updateable_type', UpdateRequest::NEW_TYPE_PAGE)
+            ->where('updateable_id', null)
+            ->where('user_id', $user->id)
+            ->firstOrFail();
+
+        $this->assertEquals($data, $updateRequest->data);
+
+        $this->approveUpdateRequest($updateRequest->id);
+
+        $this->assertDatabaseHas((new Page())->getTable(), [
+            'title' => $data['title'],
+            'slug' => Str::slug($data['title']),
+            'parent_uuid' => null,
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function createTopicPageWithMinimalDataAsContentAdmin200(): void
+    {
+        /**
+         * @var \App\Models\User $user
+         */
+        $user = User::factory()->create();
+        $user->makeContentAdmin();
+
+        Passport::actingAs($user);
+
+        $data = [
+            'title' => $this->faker->sentence(),
+            'content' => [
+                'introduction' => [
+                    'content' => [
+                        [
+                            'type' => 'copy',
+                            'value' => $this->faker->realText(),
+                        ],
+                    ],
+                ],
+                'info_pages' => [
+                    'title' => $this->faker->sentence(),
+                ],
+                'collections' => [
+                    'title' => $this->faker->sentence(),
+                ],
+            ],
+            'page_type' => Page::PAGE_TYPE_TOPIC,
         ];
 
         $response = $this->json('POST', '/core/v1/pages', $data);

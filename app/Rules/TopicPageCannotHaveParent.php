@@ -5,7 +5,7 @@ namespace App\Rules;
 use App\Models\Page;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-class LandingPageCannotHaveParent implements ValidationRule
+class TopicPageCannotHaveParent implements ValidationRule
 {
     /**
      * Parent ID.
@@ -33,7 +33,7 @@ class LandingPageCannotHaveParent implements ValidationRule
      */
     public function validate(string $attribute, $value, $fail): void
     {
-        if ($value === Page::PAGE_TYPE_LANDING && !is_null($this->parentId)) {
+        if ($value === Page::PAGE_TYPE_TOPIC && !is_null($this->parentId)) {
             $fail($this->message());
         }
     }
@@ -43,6 +43,6 @@ class LandingPageCannotHaveParent implements ValidationRule
      */
     public function message(): string
     {
-        return 'Cannot set :attribute to ' . Page::PAGE_TYPE_LANDING . ' when the page has a parent';
+        return 'Cannot set :attribute to ' . Page::PAGE_TYPE_TOPIC . ' when the page has a parent';
     }
 }
