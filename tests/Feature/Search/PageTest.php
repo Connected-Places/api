@@ -57,6 +57,36 @@ class PageTest extends TestCase implements UsesElasticsearch
         ]);
     }
 
+    public function test_query_can_filter_by_parent_id(): void
+    {
+        $parent = Page::factory()->landingPage()->create([
+            'title' => 'Parent Page',
+        ]);
+        $page = Page::factory()->create([
+            'title' => 'Child Page',
+            'parent_id' => $parent->id,
+        ]);
+
+        $pageTwo = Page::factory()->create();
+
+        sleep(1);
+
+        $response = $this->json('POST', '/core/v1/search/pages', [
+            'query' => 'Page',
+            'page' => 1,
+            'per_page' => 20,
+            'parent_id' => $parent->id,
+        ]);
+
+        $response->assertStatus(Response::HTTP_OK);
+        $response->assertJsonFragment([
+            'id' => $page->id,
+        ]);
+        $response->assertJsonMissing([
+            'id' => $pageTwo->id,
+        ]);
+    }
+
     public function test_query_matches_page_content(): void
     {
         $page = Page::factory()->landingPage()->create();

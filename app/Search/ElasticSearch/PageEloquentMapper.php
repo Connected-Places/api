@@ -13,9 +13,9 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 
-class PageEloquentMapper implements EloquentMapper
+class PageEloquentMapper
 {
-    public function paginate(SearchRequestBuilder $esQuery, int $page = null, int $perPage = null): AnonymousResourceCollection
+    public function paginate(SearchRequestBuilder $esQuery, int $page = null, int $perPage = null, string $parentId = ''): AnonymousResourceCollection
     {
         $page = page($page);
         $perPage = per_page($perPage);
@@ -25,9 +25,15 @@ class PageEloquentMapper implements EloquentMapper
 
         $this->logMetrics($queryRequest, $response);
 
+        if ($parentId) {
+            $models = $response->models()->load('ancestors')->filter(function ($model) use ($parentId) {
+                return $model->ancestors->contains('id', $parentId);
+            });
+        }
+
         // If paginated, then create a new pagination instance.
         $pages = new LengthAwarePaginator(
-            $response->models(),
+            $models ?? $response->models(),
             $response->total(),
             $perPage,
             $page,

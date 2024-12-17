@@ -38,7 +38,8 @@ class PageController
         return $mapper->paginate(
             $esQuery,
             $page,
-            $perPage
+            $perPage,
+            $request->input('parent_id') ?? ''
         );
     }
 }
